@@ -3,5 +3,16 @@
     <EditTextPreference android:title="Port number"
         android:key="port"
         android:defaultValue="8080"/>
+    <ListPreference android:title="Camera"
+        android:key="cam"
+        android:defaultValue="1"/>
+    <ListPreference android:title="Resolution"
+        android:key="resolution"
+        android:defaultValue="0"/>
+    <ListPreference android:title="Rotation"
+        android:key="rotation"
+        android:defaultValue="0"
+        android:entries="@array/Rotation"
+        android:entryValues="@array/Rotation"/>
 
 </PreferenceScreen>
