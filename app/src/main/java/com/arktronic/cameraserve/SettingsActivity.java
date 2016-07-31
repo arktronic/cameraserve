@@ -2,11 +2,14 @@ package com.arktronic.cameraserve;
 
 import android.content.SharedPreferences;
 import android.hardware.Camera;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.text.format.Formatter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +65,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         ListPreference resPref = (ListPreference) findPreference("resolution");
 
         List<Camera.Size> sizes = MainActivity.getCameraSizes().get(camId);
+        if(sizes == null) sizes = new ArrayList<>();
 
         List<CharSequence> resEntries = new ArrayList<>(),
                 resEntryValues = new ArrayList<>();
@@ -80,7 +84,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     private void updateSummaries() {
         EditTextPreference portPref = (EditTextPreference) findPreference("port");
-        portPref.setSummary("Currently set to " + portPref.getText());
+        portPref.setSummary(portPref.getText() + " (on " + getIp() + ")");
 
         ListPreference camPref = (ListPreference) findPreference("cam");
         camPref.setSummary("Cam " + (Integer.parseInt(camPref.getValue()) + 1));
@@ -89,6 +93,13 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         resPref.setSummary(resPref.getValue().replace("x", " x "));
 
         ListPreference rotPref = (ListPreference) findPreference("rotation");
-        rotPref.setSummary(rotPref.getValue());
+        rotPref.setSummary(rotPref.getEntry());
+    }
+
+    private String getIp() {
+        WifiManager wifiMgr = (WifiManager) getSystemService(WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
+        int ip = wifiInfo.getIpAddress();
+        return Formatter.formatIpAddress(ip);
     }
 }

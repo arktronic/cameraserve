@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <EditTextPreference android:title="Port number"
+    <EditTextPreference
+        android:defaultValue="8080"
         android:key="port"
-        android:defaultValue="8080"/>
-    <ListPreference android:title="Camera"
-        android:key="cam"
-        android:defaultValue="1"/>
-    <ListPreference android:title="Resolution"
-        android:key="resolution"
-        android:defaultValue="0"/>
-    <ListPreference android:title="Rotation"
-        android:key="rotation"
+        android:title="Port number" />
+    <ListPreference
         android:defaultValue="0"
-        android:entries="@array/Rotation"
-        android:entryValues="@array/Rotation"/>
+        android:key="cam"
+        android:title="Camera" />
+    <ListPreference
+        android:defaultValue="640x480"
+        android:key="resolution"
+        android:title="Resolution" />
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/RotationText"
+        android:entryValues="@array/Rotation"
+        android:key="rotation"
+        android:title="Rotation" />
 
 </PreferenceScreen>

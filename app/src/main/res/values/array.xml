@@ -6,4 +6,10 @@
         <item>180</item>
         <item>270</item>
     </string-array>
+    <string-array name="RotationText">
+        <item>0°</item>
+        <item>90° (slow)</item>
+        <item>180° (slower)</item>
+        <item>270° (slowest)</item>
+    </string-array>
 </resources>
