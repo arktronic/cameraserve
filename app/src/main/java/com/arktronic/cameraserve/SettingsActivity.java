@@ -13,8 +13,9 @@ import android.text.format.Formatter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener  {
+public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +23,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
 
         populateCameras();
+
+        populateDiscoverableId();
 
         updateSummaries();
     }
@@ -40,17 +43,26 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         updateSummaries();
     }
 
+    private void populateDiscoverableId() {
+        EditTextPreference idPref = (EditTextPreference) findPreference("id");
+        String id = idPref.getText();
+        if (id == null || id.isEmpty()) {
+            id = UUID.randomUUID().toString();
+            idPref.setText(id);
+        }
+    }
+
     private void populateCameras() {
         ListPreference camPref = (ListPreference) findPreference("cam");
         int cams = Camera.getNumberOfCameras();
         List<CharSequence> camEntries = new ArrayList<>(),
                 camEntryValues = new ArrayList<>();
-        for(int i = 0; i< cams; i++) {
-            camEntries.add(String.valueOf("Cam " + (i+1)));
+        for (int i = 0; i < cams; i++) {
+            camEntries.add(String.valueOf("Cam " + (i + 1)));
             camEntryValues.add(String.valueOf(i));
         }
         CharSequence[] entries = new CharSequence[camEntries.size()],
-                       entryValues = new CharSequence[camEntryValues.size()];
+                entryValues = new CharSequence[camEntryValues.size()];
         entries = camEntries.toArray(entries);
         entryValues = camEntryValues.toArray(entryValues);
         camPref.setEntries(entries);
@@ -65,11 +77,11 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         ListPreference resPref = (ListPreference) findPreference("resolution");
 
         List<Camera.Size> sizes = MainActivity.getCameraSizes().get(camId);
-        if(sizes == null) sizes = new ArrayList<>();
+        if (sizes == null) sizes = new ArrayList<>();
 
         List<CharSequence> resEntries = new ArrayList<>(),
                 resEntryValues = new ArrayList<>();
-        for(int i = 0; i < sizes.size(); i++) {
+        for (int i = 0; i < sizes.size(); i++) {
             Camera.Size s = sizes.get(i);
             resEntries.add(s.width + "x" + s.height);
             resEntryValues.add(s.width + "x" + s.height);
@@ -94,6 +106,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         ListPreference rotPref = (ListPreference) findPreference("rotation");
         rotPref.setSummary(rotPref.getEntry());
+
+        EditTextPreference idPref = (EditTextPreference) findPreference("id");
+        idPref.setSummary(idPref.getText());
     }
 
     private String getIp() {
