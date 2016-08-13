@@ -3,6 +3,7 @@ package com.arktronic.cameraserve;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 public class MjpegServer implements Runnable {
     private static volatile int port = 8080;
@@ -28,9 +29,10 @@ public class MjpegServer implements Runnable {
                 Socket socket = server.accept();
                 MjpegSocket mjpegSocket = new MjpegSocket(socket);
                 new Thread(mjpegSocket).start();
-            } catch (IOException e) {
-                e.printStackTrace();
-                // and continue
+            } catch (SocketTimeoutException ste) {
+                // continue silently
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
             }
 
             if(port != server.getLocalPort()) {

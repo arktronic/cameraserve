@@ -2,7 +2,6 @@ package com.arktronic.cameraserve;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
@@ -31,10 +30,12 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     private boolean previewRunning = false;
     private int camId = 0;
     private ByteArrayOutputStream previewStream = new ByteArrayOutputStream();
-    private MjpegServer mjpegServer = new MjpegServer();
-    private Thread serverThread = new Thread(mjpegServer);
     private int rotationSteps = 0;
 
+    private static SsdpAdvertiser ssdpAdvertiser = new SsdpAdvertiser();
+    private static Thread ssdpThread = new Thread(ssdpAdvertiser);
+    private static MjpegServer mjpegServer = new MjpegServer();
+    private static Thread serverThread = new Thread(mjpegServer);
     private static HashMap<Integer, List<Camera.Size>> cameraSizes = new HashMap<>();
     private static ReentrantReadWriteLock frameLock = new ReentrantReadWriteLock();
     private static byte[] jpegFrame;
@@ -114,7 +115,8 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
         loadPreferences();
 
-        serverThread.start();
+        if (!ssdpThread.isAlive()) ssdpThread.start();
+        if (!serverThread.isAlive()) serverThread.start();
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);

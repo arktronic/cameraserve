@@ -23,7 +23,7 @@
         android:key="discoverable"
         android:title="Discoverable with SSDP/UPnP" />
     <EditTextPreference
-        android:key="id"
+        android:key="ssdp_id"
         android:title="SSDP service identifier"
         android:enabled="false"
         android:selectable="false"

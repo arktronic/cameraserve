@@ -44,7 +44,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     }
 
     private void populateDiscoverableId() {
-        EditTextPreference idPref = (EditTextPreference) findPreference("id");
+        EditTextPreference idPref = (EditTextPreference) findPreference("ssdp_id");
         String id = idPref.getText();
         if (id == null || id.isEmpty()) {
             id = UUID.randomUUID().toString();
@@ -107,14 +107,12 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         ListPreference rotPref = (ListPreference) findPreference("rotation");
         rotPref.setSummary(rotPref.getEntry());
 
-        EditTextPreference idPref = (EditTextPreference) findPreference("id");
+        EditTextPreference idPref = (EditTextPreference) findPreference("ssdp_id");
         idPref.setSummary(idPref.getText());
     }
 
     private String getIp() {
         WifiManager wifiMgr = (WifiManager) getSystemService(WIFI_SERVICE);
-        WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
-        int ip = wifiInfo.getIpAddress();
-        return Formatter.formatIpAddress(ip);
+        return Formatter.formatIpAddress(wifiMgr.getConnectionInfo().getIpAddress());
     }
 }
