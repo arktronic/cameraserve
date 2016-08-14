@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     private int camId = 0;
     private ByteArrayOutputStream previewStream = new ByteArrayOutputStream();
     private int rotationSteps = 0;
+    private boolean aboveLockScreen = true;
 
     private static SsdpAdvertiser ssdpAdvertiser = new SsdpAdvertiser();
     private static Thread ssdpThread = new Thread(ssdpAdvertiser);
@@ -112,14 +113,6 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         holder = cameraView.getHolder();
         holder.addCallback(this);
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-
-        loadPreferences();
-
-        if (!ssdpThread.isAlive()) ssdpThread.start();
-        if (!serverThread.isAlive()) serverThread.start();
-
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
     }
 
     @Override
@@ -130,8 +123,15 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
         openCamAndPreview();
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        if (!ssdpThread.isAlive()) ssdpThread.start();
+        if (!serverThread.isAlive()) serverThread.start();
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+
+        if (aboveLockScreen)
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        else
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
     }
 
     @Override
@@ -158,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         rotationSteps = rotDegrees / 90;
         Integer port = Integer.parseInt(preferences.getString("port", "8080"));
         MjpegServer.setPort(port);
+        aboveLockScreen = preferences.getBoolean("above_lock_screen", aboveLockScreen);
     }
 
     private void startPreview() {

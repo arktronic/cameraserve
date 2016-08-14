@@ -41,7 +41,7 @@ public class MjpegSocket implements Runnable {
                 stream.write(("\r\n--" + boundary + "\r\n").getBytes());
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

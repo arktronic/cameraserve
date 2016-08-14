@@ -19,6 +19,15 @@
         android:key="rotation"
         android:title="Rotation" />
     <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="run_on_boot"
+        android:title="Run on startup/reboot" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="above_lock_screen"
+        android:title="Appear above the lock screen"
+        android:summary="This can also help ensure that the app keeps running on your device after the screen turns off" />
+    <CheckBoxPreference
         android:defaultValue="false"
         android:key="discoverable"
         android:title="Discoverable with SSDP/UPnP" />
