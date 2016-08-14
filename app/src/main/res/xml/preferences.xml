@@ -30,7 +30,7 @@
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="discoverable"
-        android:title="Discoverable with SSDP/UPnP" />
+        android:title="Discoverable with SSDP" />
     <EditTextPreference
         android:key="ssdp_id"
         android:title="SSDP service identifier"

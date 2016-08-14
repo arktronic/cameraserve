@@ -29,17 +29,27 @@ Side-loading capabilities are therefore required.
 What is its status?
 -------------------
 
-tl;dr: It's functional. Mostly.
+tl;dr: It's functional, but kinda rough around the edges.
 
 This app was created during a weekend hackathon.
 Code quality is, shall we say, rough at best. However, it's slowly being
-improved. Features (such as SSDP/UPnP discoverability) are being added. Other
+improved. Some features (such as SSDP discoverability) have been added. Other
 features that should arguably be required, such as authentication, have not yet
 been added, and it may be a while before they are. Tests are, regrettably,
 nonexistent as well.
 
 Pull requests to address shortcomings as well as to add useful features are
 certainly welcome.
+
+Current features include:
+
+* Motion JPEG (MJPEG) HTTP camera stream on configurable port
+* Ability to select camera source on devices with multiple cameras
+* Resolution selection
+* Rotation support (alpha)
+* Option to run on device startup
+* Option to appear above the lock screen
+* Discoverability via SSDP (though not "proper" UPnP)
 
 What does it look like?
 -----------------------
