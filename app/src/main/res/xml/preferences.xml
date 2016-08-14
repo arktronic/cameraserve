@@ -37,5 +37,13 @@
         android:enabled="false"
         android:selectable="false"
         android:shouldDisableView="false" />
+    <EditTextPreference
+        android:key="app_version"
+        android:title="App version"
+        android:enabled="false"
+        android:saveEnabled="false"
+        android:persistent="false"
+        android:selectable="false"
+        android:shouldDisableView="false" />
 
 </PreferenceScreen>

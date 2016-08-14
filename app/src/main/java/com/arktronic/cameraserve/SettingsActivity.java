@@ -109,6 +109,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         EditTextPreference idPref = (EditTextPreference) findPreference("ssdp_id");
         idPref.setSummary(idPref.getText());
+
+        EditTextPreference versionPref = (EditTextPreference) findPreference("app_version");
+        versionPref.setSummary(BuildConfig.VERSION_NAME);
     }
 
     private String getIp() {

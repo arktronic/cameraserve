@@ -37,7 +37,8 @@ public class SsdpAdvertiser implements Runnable {
             "Ext: \r\n" +
             "Cache-Control: max-age=120, no-cache=\"Ext\"\r\n" +
             "ST: " + serviceType + "\r\n" +
-            "USN: %s::" + serviceType +"\r\n" +
+            "USN: %s::" + serviceType + "\r\n" +
+            "Server: CameraServe/" + BuildConfig.VERSION_NAME + "\r\n" +
             "X-Stream-Location: http://%s:%s/\r\n\r\n";
 
     @Override
