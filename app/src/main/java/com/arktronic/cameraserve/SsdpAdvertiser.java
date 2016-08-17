@@ -3,6 +3,7 @@ package com.arktronic.cameraserve;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.text.format.Formatter;
 
@@ -30,6 +31,8 @@ public class SsdpAdvertiser implements Runnable {
     private boolean enabled = false;
     private WifiManager wifiManager;
     private WifiManager.MulticastLock multicastLock;
+    private PowerManager powerManager;
+    private PowerManager.WakeLock wakeLock;
 
     private static InetSocketAddress ssdpSocketAddress = new InetSocketAddress("239.255.255.250", 1900);
     private static String serviceType = "urn:arkconcepts-com:service:camera-mjpeg:1";
@@ -55,6 +58,8 @@ public class SsdpAdvertiser implements Runnable {
         Context ctx = AndroidApplication.getInstance().getApplicationContext();
         wifiManager = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
         multicastLock = wifiManager.createMulticastLock("SSDP-Lock");
+        powerManager = (PowerManager) ctx.getSystemService(Context.POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Multicast-Lock");
     }
 
     private void runLoop() {
@@ -62,9 +67,16 @@ public class SsdpAdvertiser implements Runnable {
         DatagramPacket packet = new DatagramPacket(new byte[2048], 2048);
 
         while (true) {
+            if (ConnectivityChangeReceiver.Changed) {
+                enabled = false;
+                ConnectivityChangeReceiver.Changed = false;
+            }
+
             if (!enabled && shouldBeEnabled()) {
                 try {
                     if (!multicastLock.isHeld()) multicastLock.acquire();
+                    if (!wakeLock.isHeld()) wakeLock.acquire();
+                    if (receivingSocket != null && !receivingSocket.isClosed()) receivingSocket.close();
                     receivingSocket = new MulticastSocket(ssdpSocketAddress.getPort());
                     receivingSocket.setReuseAddress(true);
                     receivingSocket.joinGroup(ssdpSocketAddress.getAddress());
@@ -74,6 +86,7 @@ public class SsdpAdvertiser implements Runnable {
                     e.printStackTrace();
                     receivingSocket = null;
                     if (multicastLock.isHeld()) multicastLock.release();
+                    if (wakeLock.isHeld()) wakeLock.release();
                     enabled = false;
                 }
             } else if (enabled && !shouldBeEnabled()) {
@@ -87,6 +100,7 @@ public class SsdpAdvertiser implements Runnable {
                     e.printStackTrace();
                 }
                 if (multicastLock.isHeld()) multicastLock.release();
+                if (wakeLock.isHeld()) wakeLock.release();
                 enabled = false;
             }
 
@@ -181,6 +195,10 @@ public class SsdpAdvertiser implements Runnable {
         if (multicastLock != null && multicastLock.isHeld())
             multicastLock.release();
         multicastLock = null;
+
+        if (wakeLock != null && wakeLock.isHeld())
+            wakeLock.release();
+        wakeLock = null;
     }
 
     private boolean shouldBeEnabled() {
