@@ -1,4 +1,4 @@
-package com.arktronic.cameraserve;
+package com.arkconcepts.cameraserve;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

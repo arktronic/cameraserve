@@ -1,8 +1,7 @@
-package com.arktronic.cameraserve;
+package com.arkconcepts.cameraserve;
 
 import android.content.SharedPreferences;
 import android.hardware.Camera;
-import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.preference.EditTextPreference;

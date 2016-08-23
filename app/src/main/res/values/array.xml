@@ -9,7 +9,7 @@
     <string-array name="RotationText">
         <item>0°</item>
         <item>90° (slow)</item>
-        <item>180° (slower)</item>
-        <item>270° (slowest)</item>
+        <item>180° (slow)</item>
+        <item>270° (slow)</item>
     </string-array>
 </resources>

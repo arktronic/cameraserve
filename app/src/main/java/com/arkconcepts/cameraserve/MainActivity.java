@@ -1,4 +1,4 @@
-package com.arktronic.cameraserve;
+package com.arkconcepts.cameraserve;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -233,76 +233,31 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         Camera.Parameters p = camera.getParameters();
 
         int previewHeight = p.getPreviewSize().height,
-                previewWidth = p.getPreviewSize().width;
+            previewWidth = p.getPreviewSize().width;
 
-//        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-//        Bitmap scaled = Bitmap.createScaledBitmap(bmp, previewHeight, previewWidth, true);
-//        int w = scaled.getWidth();
-//        int h = scaled.getHeight();
-//        Matrix mtx = new Matrix();
-//        mtx.postRotate(90);
-//        // Rotating Bitmap
-//        bmp = Bitmap.createBitmap(scaled, 0, 0, w, h, mtx, true);
-//        bmp.compress(Bitmap.CompressFormat.JPEG, 100, previewStream);
+        switch(rotationSteps) {
+            case 1:
+                bytes = Rotator.rotateYUV420Degree90(bytes, previewWidth, previewHeight);
+                break;
+            case 2:
+                bytes = Rotator.rotateYUV420Degree180(bytes, previewWidth, previewHeight);
+                break;
+            case 3:
+                bytes = Rotator.rotateYUV420Degree270(bytes, previewWidth, previewHeight);
+                break;
+        }
 
-        for (int i = 0; i < rotationSteps; i++) {
-            bytes = rotateYUV420Degree90(bytes, previewWidth, previewHeight);
-
+        if (rotationSteps == 1 || rotationSteps == 3) {
             int tmp = previewHeight;
             previewHeight = previewWidth;
             previewWidth = tmp;
         }
-
-//        int format = p.getPreviewFormat();
-//        new YuvImage(bytes, format, p.getPreviewSize().width, p.getPreviewSize().height, null)
-//                .compressToJpeg(new Rect(0, 0, p.getPreviewSize().width, p.getPreviewSize().height),
-//                        100, previewStream);
 
         int format = p.getPreviewFormat();
         new YuvImage(bytes, format, previewWidth, previewHeight, null)
                 .compressToJpeg(new Rect(0, 0, previewWidth, previewHeight),
                         100, previewStream);
 
-
-//        int format = p.getPreviewFormat();
-//        new YuvImage(bytes, format, previewWidth, previewHeight, null)
-//                .compressToJpeg(new Rect(0, 0, previewWidth, previewHeight),
-//                        100, previewStream);
-//
-//        Bitmap bmp = BitmapFactory.decodeByteArray(previewStream.toByteArray(), 0, previewStream.size());
-//        Bitmap scaled = Bitmap.createScaledBitmap(bmp, previewHeight, previewWidth, true);
-//        int w = scaled.getWidth();
-//        int h = scaled.getHeight();
-//        Matrix mtx = new Matrix();
-//        mtx.postRotate(90);
-//        // Rotating Bitmap
-//        bmp = Bitmap.createBitmap(scaled, 0, 0, w, h, mtx, true);
-//        previewStream.reset();
-//        bmp.compress(Bitmap.CompressFormat.JPEG, 100, previewStream);
-
         setJpegFrame(previewStream);
-    }
-
-    private byte[] rotateYUV420Degree90(byte[] data, int imageWidth, int imageHeight) {
-        byte[] yuv = new byte[imageWidth * imageHeight * 3 / 2];
-        // Rotate the Y luma
-        int i = 0;
-        for (int x = 0; x < imageWidth; x++) {
-            for (int y = imageHeight - 1; y >= 0; y--) {
-                yuv[i] = data[y * imageWidth + x];
-                i++;
-            }
-        }
-        // Rotate the U and V color components
-        i = imageWidth * imageHeight * 3 / 2 - 1;
-        for (int x = imageWidth - 1; x > 0; x = x - 2) {
-            for (int y = 0; y < imageHeight / 2; y++) {
-                yuv[i] = data[(imageWidth * imageHeight) + (y * imageWidth) + x];
-                i--;
-                yuv[i] = data[(imageWidth * imageHeight) + (y * imageWidth) + (x - 1)];
-                i--;
-            }
-        }
-        return yuv;
     }
 }

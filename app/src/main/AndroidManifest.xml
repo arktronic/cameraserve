@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.arktronic.cameraserve">
+    package="com.arkconcepts.cameraserve">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -16,11 +16,11 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:name=".AndroidApplication"
+        android:name="com.arkconcepts.cameraserve.AndroidApplication"
         android:supportsRtl="false"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name="com.arkconcepts.cameraserve.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar">
@@ -31,12 +31,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name="com.arkconcepts.cameraserve.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:screenOrientation="landscape" />
 
         <receiver
-            android:name=".BootupReceiver"
+            android:name="com.arkconcepts.cameraserve.BootupReceiver"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
@@ -48,7 +48,7 @@
         </receiver>
 
         <receiver
-            android:name=".ConnectivityChangeReceiver"
+            android:name="com.arkconcepts.cameraserve.ConnectivityChangeReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

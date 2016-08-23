@@ -1,4 +1,4 @@
-package com.arktronic.cameraserve;
+package com.arkconcepts.cameraserve;
 
 import java.io.IOException;
 import java.net.ServerSocket;
