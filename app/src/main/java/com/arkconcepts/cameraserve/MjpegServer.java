@@ -11,6 +11,11 @@ public class MjpegServer implements Runnable {
         port = portNum;
     }
 
+    private static volatile boolean allIpsAllowed = false;
+    public static void setAllIpsAllowed(boolean allowAll) {
+        allIpsAllowed = allowAll;
+    }
+
     @Override
     public void run() {
         android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
@@ -27,8 +32,12 @@ public class MjpegServer implements Runnable {
         while(true) {
             try {
                 Socket socket = server.accept();
-                MjpegSocket mjpegSocket = new MjpegSocket(socket);
-                new Thread(mjpegSocket).start();
+                if (allIpsAllowed || socket.getInetAddress().isSiteLocalAddress()) {
+                    MjpegSocket mjpegSocket = new MjpegSocket(socket);
+                    new Thread(mjpegSocket).start();
+                } else {
+                    socket.close();
+                }
             } catch (SocketTimeoutException ste) {
                 // continue silently
             } catch (IOException ioe) {

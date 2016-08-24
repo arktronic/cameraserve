@@ -159,6 +159,8 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         Integer port = Integer.parseInt(preferences.getString("port", "8080"));
         MjpegServer.setPort(port);
         aboveLockScreen = preferences.getBoolean("above_lock_screen", aboveLockScreen);
+        Boolean allIps = preferences.getBoolean("allow_all_ips", false);
+        MjpegServer.setAllIpsAllowed(allIps);
     }
 
     private void startPreview() {

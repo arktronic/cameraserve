@@ -23,6 +23,10 @@
         android:key="run_on_boot"
         android:title="Run on startup/reboot" />
     <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="allow_all_ips"
+        android:title="Allow access from all IPs (DANGEROUS!)" />
+    <CheckBoxPreference
         android:defaultValue="true"
         android:key="above_lock_screen"
         android:title="Appear above the lock screen"

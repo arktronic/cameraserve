@@ -1,13 +1,17 @@
 package com.arkconcepts.cameraserve;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.hardware.Camera;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.text.format.Formatter;
 
 import java.util.ArrayList;
@@ -25,6 +29,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         populateDiscoverableId();
 
+        enableIpWarning();
+
         updateSummaries();
     }
 
@@ -40,6 +46,38 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         populateResolutions();
         updateSummaries();
+    }
+
+    private void enableIpWarning() {
+        final CheckBoxPreference ipPref = (CheckBoxPreference) findPreference("allow_all_ips");
+        ipPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                if ((Boolean) newValue) {
+                    new AlertDialog.Builder(SettingsActivity.this)
+                            .setTitle("Are you sure?")
+                            .setMessage("Normally, CameraServe only talks to local (LAN) IPs. Allowing all IPs to access CameraServe poses a security risk because there is no built in authentication or encryption. Are you sure you want to proceed?")
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setNegativeButton("No, allow local only", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int button) {
+                                    // preference wasn't saved anyway; nothing to do...
+                                }
+                            })
+                            .setPositiveButton("Yes, allow all", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int button) {
+                                    ipPref.setChecked(true);
+                                }
+                            })
+                            .create().show();
+
+                    return false;
+                }
+
+                return true;
+            }
+        });
     }
 
     private void populateDiscoverableId() {
